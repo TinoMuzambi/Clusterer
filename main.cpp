@@ -12,22 +12,33 @@ int main(int argc, char* argv[]) {
     if (argc == 2) {
         dataset = argv[1];
     }
-    else if (argc == 3) {
-        output = argv[2];
-    }
-    else if (argc == 4) {
-        output = argv[2];
-        noClusters = stoi(argv[3]);
-    }
-    else if (argc == 5) {
-        output = argv[2];
-        noClusters = stoi(argv[3]);
-        binWidth = stoi(argv[4]);
+    else if (argc > 2) {
+        dataset = argv[1];
+        for (int i = 2; i < argc; i++) {
+            char curr = string(argv[i])[1];
+            if (curr== 'o') {
+                output = string(argv[i + 1]);
+            }
+            else if (curr== 'k') {
+                noClusters = stoi(string(argv[i + 1]));
+            }
+            else if (curr== 'b') {
+                binWidth = stoi(string(argv[i + 1]));
+            }
+            else {
+                cout << "Ignoring nonsensical input." << endl;
+            }
+        }
     }
     else {
         cout << "Please provide the necessary requirements." << endl;
         return 1;
     }
+
+    cout << dataset << endl;
+    cout << output << endl;
+    cout << noClusters << endl;
+    cout << binWidth << endl;
 
     return 0;
 }
