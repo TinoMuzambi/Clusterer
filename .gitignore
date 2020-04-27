@@ -4,3 +4,5 @@
 *.zip
 *.txt
 ./cmake-build-debug
+*.o
+/clusterer
