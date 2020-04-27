@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
             }
             else {
                 cout << "Ignoring nonsensical input." << endl;
+                break;
             }
         }
     }
@@ -34,11 +35,6 @@ int main(int argc, char* argv[]) {
         cout << "Please provide the necessary requirements." << endl;
         return 1;
     }
-
-    cout << dataset << endl;
-    cout << output << endl;
-    cout << noClusters << endl;
-    cout << binWidth << endl;
 
     return 0;
 }
