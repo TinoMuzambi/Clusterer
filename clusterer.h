@@ -1,6 +1,4 @@
-//
-// Created by t56mu on 2020/04/27.
-//
+// MZMTIN002
 
 #ifndef ASSIGNMENT_4_CLUSTERER_H
 #define ASSIGNMENT_4_CLUSTERER_H
