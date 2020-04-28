@@ -3,6 +3,7 @@
 using namespace std;
 #include "iostream"
 #include "string"
+#include "clusterer.h"
 
 int main(int argc, char* argv[]) {
     string dataset;
@@ -35,6 +36,9 @@ int main(int argc, char* argv[]) {
         cout << "Please provide the necessary requirements." << endl;
         return 1;
     }
+
+    MZMTIN002::Clusterer clusterer;
+    clusterer.grayscale();
 
     return 0;
 }

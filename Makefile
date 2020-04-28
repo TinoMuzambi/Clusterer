@@ -18,4 +18,4 @@ clean:
 	@rm -f *.raw
 
 run:
-	@./clusterer
+	@./clusterer Gradient_Numbers_PPMS
