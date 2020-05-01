@@ -1,6 +1,6 @@
 # MZMTIN002 Assignment 4
 
-clusterer <dataset> [-o output] [-k n] [-bin b]
+clusterer \<dataset> [-o output] [-k n] [-bin b]
 
 dataset is the location of
 the folder that contains the images to be clustered. There are also three optional command

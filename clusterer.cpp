@@ -3,7 +3,7 @@
 #include "clusterer.h"
 
 void MZMTIN002::Clusterer::grayscale() { // TODO skip header
-    ifstream raw("Gradient_Numbers_PPMS/five_1.ppm", ios::binary);
+    ifstream raw(filename + "five_1.ppm", ios::binary);
     if (!raw) {
         cout << "Nah nigga" << endl;
         return;

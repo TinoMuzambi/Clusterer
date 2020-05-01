@@ -10,12 +10,12 @@ int main(int argc, char* argv[]) {
     string output;
     int noClusters = 10;
     int binWidth = 1;
-    if (argc == 3) {
-        dataset = argv[3]; // -o data -bin 5
+    if (argc == 2) {
+        dataset = argv[1]; // Gradient_Numbers_PPMS/ -o data.txt -k 5 -bin 5
     }
-    else if (argc > 3) {
-        dataset = argv[2];
-        for (int i = 3; i < argc; i++) {
+    else if (argc > 2) {
+        dataset = argv[1];
+        for (int i = 2; i < argc; i += 2) {
             char curr = string(argv[i])[1];
             if (curr== 'o') {
                 output = string(argv[i + 1]);
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    MZMTIN002::Clusterer clusterer(output, noClusters, binWidth);
+    MZMTIN002::Clusterer clusterer(dataset, noClusters, binWidth);
     clusterer.grayscale();
 
     return 0;
