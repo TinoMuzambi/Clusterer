@@ -8,15 +8,20 @@
 using namespace std;
 #include "iostream"
 #include <fstream>
+#include <vector>
 
 namespace MZMTIN002 {
 
     class Clusterer {
     private:
-        int someInt;
+        int noClusters, binWidth;
+        string filename;
+        vector<int **> images;
     public:
-        Clusterer(); // constructor
+        Clusterer(const string &filename, int noClusters, int binWidth); // constructor
 
         void grayscale();
+
+        void histogram();
     };
 }

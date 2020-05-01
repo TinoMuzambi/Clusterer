@@ -2,12 +2,8 @@
 
 #include "clusterer.h"
 
-MZMTIN002::Clusterer::Clusterer() {
-    someInt = 0;
-}
-
-void MZMTIN002::Clusterer::grayscale() {
-    ifstream raw("Gradient_Numbers_PPMS/eight_1.ppm", ios::binary);
+void MZMTIN002::Clusterer::grayscale() { // TODO skip header
+    ifstream raw("Gradient_Numbers_PPMS/five_1.ppm", ios::binary);
     if (!raw) {
         cout << "Nah nigga" << endl;
         return;
@@ -30,3 +26,10 @@ void MZMTIN002::Clusterer::grayscale() {
         cout << endl;
     }
 }
+
+MZMTIN002::Clusterer::Clusterer(const string &filename, const int noClusters, const int binWidth) {
+    this->noClusters = noClusters;
+    this->binWidth = binWidth;
+    this->filename = filename;
+}
+
