@@ -3,21 +3,31 @@
 #include "clusterer.h"
 
 void MZMTIN002::Clusterer::grayscale() { // TODO skip header
-    ifstream raw(filename + "five_1.ppm", ios::binary);
-    if (!raw) {
+    ifstream ppm;
+    ppm.open(filename + "five_1.ppm", ios::binary);
+    if (ppm.fail()) {
         cout << "Nah nigga" << endl;
         return;
     }
-    unsigned char ** temp = nullptr;
-    temp = new unsigned char*[32];
-    for (auto y = 0; y < 32; y++) {
-        temp[y] = new unsigned char[32];
+    string header;
+    int w, h, b;
+    ppm >> header;
+    if (strcmp(header.c_str(), "P6") != 0) {
+        return;
+    }
+    ppm >> w >> h >> b;
+    ppm.ignore(256, '\n');
 
-        for (auto z = 0; z < 32; z++) {
-            temp[y][z] = raw.get();
+    unsigned char ** temp = nullptr;
+    temp = new unsigned char*[w];
+    for (auto y = 0; y < w; y++) {
+        temp[y] = new unsigned char[h];
+
+        for (auto z = 0; z < h; z++) {
+            temp[y][z] = ppm.get();
         }
     }
-    raw.close();
+    ppm.close();
 
     for (int i = 0; i < 32; ++i) {
         for (int j = 0; j < 32; ++j) {

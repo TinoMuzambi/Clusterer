@@ -7,6 +7,7 @@
 
 using namespace std;
 #include "iostream"
+#include <cstring>
 #include <fstream>
 #include <vector>
 
