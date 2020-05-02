@@ -27,10 +27,12 @@ namespace MZMTIN002 {
     public:
         Clusterer(const string &filename, int noClusters, int binWidth); // constructor
 
-        void grayscale();
+        bool openFile();
+
+        vector<pixel> grayscale();
 
         void histogram();
 
-        pixel& get(unsigned int a, unsigned int b);
+        pixel& get(unsigned int a, unsigned int b, vector<pixel>& myPixel);
     };
 }
