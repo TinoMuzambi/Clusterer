@@ -19,9 +19,9 @@ namespace MZMTIN002 {
         string filename;
 
         struct pixel {
-            int r; // red
-            int g; // green
-            int b; // blue
+            int r;
+            int g;
+            int b;
         };
     public:
         Clusterer(const string &filename, int noClusters, int binWidth); // constructor

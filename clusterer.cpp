@@ -4,7 +4,7 @@
 
 void MZMTIN002::Clusterer::grayscale() { // TODO skip header
     ifstream ppm;
-    ppm.open(filename + "five_1.ppm", ios::binary);
+    ppm.open(filename + "eight_1.ppm", ios::binary);
     if (ppm.fail()) {
         cout << "Nah nigga" << endl;
         return;
@@ -16,17 +16,35 @@ void MZMTIN002::Clusterer::grayscale() { // TODO skip header
         return;
     }
     ppm >> w >> h >> b;
-    ppm.ignore(256, '\n');
 
     pixel colours{};
-    pixel ** image;
-    for (auto y = 0; y < h; y++) {
-        for (auto z = 0; z < w; z++) {
+    pixel** image = new pixel* [w];
+
+    for (int j = 0; j < w; j++) {
+        image[j] = new pixel[h];
+    }
+    for (auto i = 0; i < h; i++) {
+        for (auto j = 0; j < w; j++) {
             ppm >> colours.r >> colours.g >> colours.b;
-            image[z][y] = colours;
+            image[j][i] = colours;
         }
     }
     ppm.close();
+
+    for (int i = 0; i < h; ++i) {
+        for (int j = 0; j < w; ++j) {
+            cout << image[i][j].r << " " << image[i][j].g << " " << image[i][j].b;
+        }
+        cout << endl;
+    }
+
+    for (int j = 0; j < w; j++) {
+        delete [] image[j];
+    }
+
+    //Delete image.
+    delete [] image;
+
 
 }
 
