@@ -2,7 +2,7 @@
 
 #include "clusterer.h"
 
-void MZMTIN002::Clusterer::grayscale() { // TODO skip header
+void MZMTIN002::Clusterer::grayscale() {
     ifstream ppm;
     ppm.open(filename + "eight_1.ppm", ios::binary);
     if (ppm.fail()) {
@@ -17,15 +17,17 @@ void MZMTIN002::Clusterer::grayscale() { // TODO skip header
     }
     ppm >> w >> h >> b;
 
+    cout << w << h << b << endl;
     pixel colours{};
-    pixel** image = new pixel* [w];
+    auto** image = new pixel* [w];
 
-    for (int j = 0; j < w; j++) {
-        image[j] = new pixel[h];
+    for (int i = 0; i < w; i++) {
+        image[i] = new pixel[h];
     }
     for (auto i = 0; i < h; i++) {
         for (auto j = 0; j < w; j++) {
             ppm >> colours.r >> colours.g >> colours.b;
+            cout << colours.r << colours.g << colours.b << endl;
             image[j][i] = colours;
         }
     }
@@ -44,8 +46,6 @@ void MZMTIN002::Clusterer::grayscale() { // TODO skip header
 
     //Delete image.
     delete [] image;
-
-
 }
 
 MZMTIN002::Clusterer::Clusterer(const string &filename, const int noClusters, const int binWidth) {
