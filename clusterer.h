@@ -17,7 +17,12 @@ namespace MZMTIN002 {
     private:
         int noClusters, binWidth;
         string filename;
-        vector<int **> images;
+
+        struct pixel {
+            int r; // red
+            int g; // green
+            int b; // blue
+        };
     public:
         Clusterer(const string &filename, int noClusters, int binWidth); // constructor
 

@@ -18,23 +18,16 @@ void MZMTIN002::Clusterer::grayscale() { // TODO skip header
     ppm >> w >> h >> b;
     ppm.ignore(256, '\n');
 
-    unsigned char ** temp = nullptr;
-    temp = new unsigned char*[w];
-    for (auto y = 0; y < w; y++) {
-        temp[y] = new unsigned char[h];
-
-        for (auto z = 0; z < h; z++) {
-            temp[y][z] = ppm.get();
+    pixel colours{};
+    pixel ** image;
+    for (auto y = 0; y < h; y++) {
+        for (auto z = 0; z < w; z++) {
+            ppm >> colours.r >> colours.g >> colours.b;
+            image[z][y] = colours;
         }
     }
     ppm.close();
 
-    for (int i = 0; i < 32; ++i) {
-        for (int j = 0; j < 32; ++j) {
-            cout << int(temp[i][j]) << " ";
-        }
-        cout << endl;
-    }
 }
 
 MZMTIN002::Clusterer::Clusterer(const string &filename, const int noClusters, const int binWidth) {
