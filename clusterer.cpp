@@ -4,53 +4,55 @@
 
 void MZMTIN002::Clusterer::grayscale() {
     ifstream ppm;
-    ppm.open(filename + "eight_1.ppm", ios::binary);
+    ppm.open(filename + "eight_1.ppm");
     if (ppm.fail()) {
         cout << "Nah nigga" << endl;
         return;
     }
     string header;
-    int w, h, b;
+    int b;
     ppm >> header;
     if (strcmp(header.c_str(), "P6") != 0) {
+        cout << "Not P6" << endl;
         return;
     }
     ppm >> w >> h >> b;
+    ppm.ignore(256, '\n');
 
-    cout << w << h << b << endl;
+//    cout << w << h << b << endl;
+
+    int buffSize = 3 * w * h;
+    pixelData = new char[buffSize];
+    ppm.read(pixelData, buffSize);
+
     pixel colours{};
-    auto** image = new pixel* [w];
+    pixels.clear();
+    for (int i = 0; i < buffSize; i += 3) {
+        colours.r = pixelData[i];
+        colours.g = pixelData[i + 1];
+        colours.b = pixelData[i + 2];
 
-    for (int i = 0; i < w; i++) {
-        image[i] = new pixel[h];
+        pixels.push_back(colours);
     }
-    for (auto i = 0; i < h; i++) {
-        for (auto j = 0; j < w; j++) {
-            ppm >> colours.r >> colours.g >> colours.b;
-            cout << colours.r << colours.g << colours.b << endl;
-            image[j][i] = colours;
-        }
-    }
+
     ppm.close();
 
-    for (int i = 0; i < h; ++i) {
-        for (int j = 0; j < w; ++j) {
-            cout << image[i][j].r << " " << image[i][j].g << " " << image[i][j].b;
+    // Test code
+    for (unsigned int i = 0; i < h; i++) {
+        for (unsigned int j = 0; j < w; j++) {
+            pixel& ref_colour = get(j, i);
+            cout << "RGB {" << (int)ref_colour.r << ", " << (int)ref_colour.g << ", " << (int)ref_colour.b << "}" << endl;
         }
-        cout << endl;
     }
-
-    for (int j = 0; j < w; j++) {
-        delete [] image[j];
-    }
-
-    //Delete image.
-    delete [] image;
 }
 
 MZMTIN002::Clusterer::Clusterer(const string &filename, const int noClusters, const int binWidth) {
     this->noClusters = noClusters;
     this->binWidth = binWidth;
     this->filename = filename;
+}
+
+MZMTIN002::Clusterer::pixel &MZMTIN002::Clusterer::get(unsigned int a, unsigned int b) {
+    return pixels[(b * w) + a];
 }
 

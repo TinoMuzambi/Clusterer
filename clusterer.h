@@ -15,19 +15,22 @@ namespace MZMTIN002 {
 
     class Clusterer {
     private:
-        int noClusters, binWidth;
+        int noClusters, binWidth, w{}, h{};
         string filename;
-
+        char* pixelData{};
         struct pixel {
-            int r;
-            int g;
-            int b;
+            unsigned char r;
+            unsigned char g;
+            unsigned char b;
         };
+        vector<pixel> pixels;
     public:
         Clusterer(const string &filename, int noClusters, int binWidth); // constructor
 
         void grayscale();
 
         void histogram();
+
+        pixel& get(unsigned int a, unsigned int b);
     };
 }
