@@ -48,12 +48,14 @@ bool MZMTIN002::Clusterer::openFile() {
     for (int i = 0; i < w * h; ++i) {
         cout << int(grayPixels[i]) << " " << endl;
     }
-//    for (unsigned int i = 0; i < h; i++) {
-//        for (unsigned int j = 0; j < w; j++) {
-//            pixel& ref_colour = get(j, i, grayPixels);
-//            cout << "RGB {" << (int)ref_colour.r << ", " << (int)ref_colour.g << ", " << (int)ref_colour.b << "}" << endl;
-//        }
-//    }
+
+    generateHistogram(grayPixels);
+
+    cout << "Histogram" << endl;
+    int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
+    for (int i = 0; i < noEntries; ++i) {
+        cout << i << " - " << int(histogram[i]) << " " << endl;
+    }
 
     return true;
 }
@@ -68,17 +70,29 @@ MZMTIN002::Clusterer::pixel &MZMTIN002::Clusterer::get(unsigned int a, unsigned 
     return myPixel[(b * w) + a];
 }
 
-unsigned char * MZMTIN002::Clusterer::grayscale() {
-    unsigned char *grayPixels;
+vector<unsigned char> MZMTIN002::Clusterer::grayscale() {
     pixel colours{};
-    grayPixels = new unsigned char[w * h];
-    for (int i = 0; i < w * h; ++i) {
-        grayPixels[i] = (pixels[i].r * 0.21) + (pixels[i].g * 0.72) + (pixels[i].b * 0.07);
-//        colours.r = pixels[i].r * 0.21; // Add these suckers into a single pixel value.
-//        colours.g = pixels[i].g * 0.72;
-//        colours.b = pixels[i].b * 0.07;
+    vector<unsigned char> grayPixels;
+    grayPixels.reserve(w * h);
+for (int i = 0; i < w * h; ++i) {
+        grayPixels.push_back((pixels[i].r * 0.21) + (pixels[i].g * 0.72) + (pixels[i].b * 0.07));
     }
-
     return grayPixels;
 }
+
+void MZMTIN002::Clusterer::generateHistogram(vector<unsigned char> grayPixels) {
+    int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
+    histogram = new unsigned char[noEntries];
+    for (int i = 0; i < noEntries; ++i) {
+        histogram[i] = 0;
+    }
+    for (unsigned char grayPixel : grayPixels) {
+        int pos = grayPixel / binWidth;
+        histogram[pos]++;
+    }
+}
+//
+//bool MZMTIN002::Clusterer::inRange(int low, int high, int x) {
+//    return ((x-high)*(x-low) <= 0);
+//}
 

@@ -7,6 +7,7 @@
 
 using namespace std;
 #include "iostream"
+#include <cmath>
 #include <cstring>
 #include <fstream>
 #include <vector>
@@ -15,7 +16,7 @@ namespace MZMTIN002 {
 
     class Clusterer {
     private:
-        int noClusters, binWidth, w{}, h{};
+        int noClusters, binWidth, w, h;
         string filename;
         char* pixelData{};
         struct pixel {
@@ -24,14 +25,17 @@ namespace MZMTIN002 {
             unsigned char b;
         };
         vector<pixel> pixels;
+        unsigned char* histogram;
     public:
         Clusterer(const string &filename, int noClusters, int binWidth); // constructor
 
         bool openFile();
 
-        unsigned char * grayscale();
+        vector<unsigned char> grayscale();
 
-        void histogram();
+        void generateHistogram(vector<unsigned char> grayPixels);
+
+        bool inRange(int low, int high, int x);
 
         pixel& get(unsigned int a, unsigned int b, vector<pixel>& myPixel);
     };
