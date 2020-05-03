@@ -108,13 +108,17 @@ int main(int argc, char* argv[]) {
 
         vector<unsigned int> histogram = clusterer.generateHistogram(grayPixels);
 
-        cout << "Histogram #" << i << endl;
-        int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
-        for (int i = 0; i < noEntries; ++i) {
-            cout << i << " - " << int(histogram[i]) << " " << endl;
-        }
+//        cout << "Histogram #" << i << endl;
+//        int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
+//        for (int i = 0; i < noEntries; ++i) {
+//            cout << i << " - " << int(histogram[i]) << " " << endl;
+//        }
 
         histograms.push_back(hist(histogram));
+    }
+
+    for (auto i : histograms) {
+        cout << i.histMean() << endl;
     }
 
     cout << "final histogram size: " << histograms.size() << endl;
