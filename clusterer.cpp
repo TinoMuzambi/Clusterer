@@ -73,7 +73,7 @@ unsigned char * MZMTIN002::Clusterer::grayscale() {
     pixel colours{};
     grayPixels = new unsigned char[w * h];
     for (int i = 0; i < w * h; ++i) {
-        grayPixels[i] = pixels[i].r * 0.21 + pixels[i].g * 0.72 + pixels[i].b * 0.07;
+        grayPixels[i] = (pixels[i].r * 0.21) + (pixels[i].g * 0.72) + (pixels[i].b * 0.07);
 //        colours.r = pixels[i].r * 0.21; // Add these suckers into a single pixel value.
 //        colours.g = pixels[i].g * 0.72;
 //        colours.b = pixels[i].b * 0.07;
