@@ -4,7 +4,7 @@
 
 bool MZMTIN002::Clusterer::readImageData() {
     ifstream ppm;
-    ppm.open(filename + "test.ppm");
+    ppm.open(filename + "eight_1.ppm");
     if (ppm.fail()) {
         cout << "Nah nigga" << endl;
         return false;
@@ -47,10 +47,10 @@ bool MZMTIN002::Clusterer::readImageData() {
     cout << "Grayscale image" << endl;
     auto grayPixels = makeGrayscale();
     for (int i = 0; i < w * h; ++i) {
-        cout << int(grayPixels[i]) << " " << endl;
+        cout << int(grayPixels[i])<< " " << endl;
     }
 
-    vector<unsigned char> histogram = generateHistogram(grayPixels);
+    vector<unsigned int> histogram = generateHistogram(grayPixels);
 
     cout << "Histogram" << endl;
     int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
@@ -82,8 +82,8 @@ for (int i = 0; i < w * h; ++i) {
     return grayPixels;
 }
 
-vector<unsigned char> MZMTIN002::Clusterer::generateHistogram(const vector<unsigned char>& grayPixels) const {
-    vector<unsigned char> histogram;
+vector<unsigned int> MZMTIN002::Clusterer::generateHistogram(const vector<unsigned char>& grayPixels) const {
+    vector<unsigned int> histogram;
     int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
     histogram.reserve(noEntries);
     for (int i = 0; i < noEntries; ++i) {
@@ -91,7 +91,7 @@ vector<unsigned char> MZMTIN002::Clusterer::generateHistogram(const vector<unsig
     }
     for (unsigned char grayPixel : grayPixels) {
         int pos = grayPixel / binWidth;
-        histogram[pos]++;
+        histogram[pos] += 1;
     }
 
     return histogram;

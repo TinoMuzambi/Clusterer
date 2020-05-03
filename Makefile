@@ -15,4 +15,4 @@ clean:
 	@rm -f ./clusterer *.o
 
 run:
-	@./clusterer Gradient_Numbers_PPMS/
+	@./clusterer Gradient_Numbers_PPMS/ -bin 70
