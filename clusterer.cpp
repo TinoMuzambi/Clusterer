@@ -4,7 +4,7 @@
 
 bool MZMTIN002::Clusterer::readImageData() {
     ifstream ppm;
-    ppm.open(filename + "eight_1.ppm");
+    ppm.open(filename + "test.ppm");
     if (ppm.fail()) {
         cout << "Nah nigga" << endl;
         return false;
@@ -50,7 +50,7 @@ bool MZMTIN002::Clusterer::readImageData() {
         cout << int(grayPixels[i]) << " " << endl;
     }
 
-    generateHistogram(grayPixels);
+    vector<unsigned char> histogram = generateHistogram(grayPixels);
 
     cout << "Histogram" << endl;
     int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
@@ -64,7 +64,6 @@ bool MZMTIN002::Clusterer::readImageData() {
 MZMTIN002::Clusterer::Clusterer(const string &filename, const int noClusters, const int binWidth) {
     w = 0;
     h = 0;
-    histogram = nullptr;
     this->noClusters = noClusters;
     this->binWidth = binWidth;
     this->filename = filename;
@@ -83,9 +82,10 @@ for (int i = 0; i < w * h; ++i) {
     return grayPixels;
 }
 
-void MZMTIN002::Clusterer::generateHistogram(const vector<unsigned char>& grayPixels) {
+vector<unsigned char> MZMTIN002::Clusterer::generateHistogram(const vector<unsigned char>& grayPixels) const {
+    vector<unsigned char> histogram;
     int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
-    histogram = new unsigned char[noEntries];
+    histogram.reserve(noEntries);
     for (int i = 0; i < noEntries; ++i) {
         histogram[i] = 0;
     }
@@ -93,4 +93,6 @@ void MZMTIN002::Clusterer::generateHistogram(const vector<unsigned char>& grayPi
         int pos = grayPixel / binWidth;
         histogram[pos]++;
     }
+
+    return histogram;
 }

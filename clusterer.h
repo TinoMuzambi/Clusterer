@@ -25,7 +25,6 @@ namespace MZMTIN002 {
             unsigned char b;
         };
         vector<pixel> pixels;
-        unsigned char* histogram;
     public:
         Clusterer(const string &filename, int noClusters, int binWidth); // constructor
 
@@ -33,7 +32,7 @@ namespace MZMTIN002 {
 
         vector<unsigned char> makeGrayscale(); // convert image into grayscale and store in vector of unsigned chars.
 
-        void generateHistogram(const vector<unsigned char>& grayPixels); // generate histogram to be used for clustering.
+        vector<unsigned char> generateHistogram(const vector<unsigned char>& grayPixels) const; // generate histogram to be used for clustering.
 
         pixel& get(unsigned int a, unsigned int b, vector<pixel>& myPixel) const; // get pixel data at (a, b)
     };

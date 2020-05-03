@@ -15,4 +15,4 @@ clean:
 	@rm -f ./clusterer *.o
 
 run:
-	@./clusterer Gradient_Numbers_PPMS/ -o output.txt -k 5 -bin 4
+	@./clusterer Gradient_Numbers_PPMS/
