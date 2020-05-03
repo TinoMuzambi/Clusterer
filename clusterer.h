@@ -10,6 +10,7 @@ using namespace std;
 #include <cmath>
 #include <cstring>
 #include <fstream>
+#include <utility>
 #include <vector>
 
 namespace MZMTIN002 {
@@ -36,6 +37,36 @@ namespace MZMTIN002 {
 
         pixel& get(unsigned int a, unsigned int b, vector<pixel>& myPixel) const; // get pixel data at (a, b)
 
-        int getSize();
+        struct hist {
+            vector<unsigned int> histogram;
+            int cluster;
+            double distance;
+            double mean;
+
+            hist():
+                cluster(-1),
+                distance(__DBL_MAX__) {}
+
+            hist(vector<unsigned int> histogram):
+                histogram(move(histogram)),
+                cluster(-1),
+                distance(__DBL_MAX__),
+                mean(__DBL_MAX__) {}
+
+            double histMean() {
+                unsigned int sum = 0;
+                for (auto i : histogram) {
+                    sum += i;
+                }
+
+                return sum*(1.0) / histogram.size();
+            }
+
+            double histDistance(double otherMean) const {
+                return abs(mean - otherMean);
+            }
+        };
+
+        int getSize() const; // return total number of pixels, width * height
     };
 }
