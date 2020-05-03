@@ -13,9 +13,6 @@ clusterer.o: clusterer.cpp clusterer.h
 
 clean:
 	@rm -f ./clusterer *.o
-	@rm -f *.dat
-	@rm -f *.bin
-	@rm -f *.raw
 
 run:
-	@./clusterer Gradient_Numbers_PPMS/ -o output.txt -k 5 -bin 10
+	@./clusterer Gradient_Numbers_PPMS/ -o output.txt -k 5 -bin 4
