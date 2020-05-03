@@ -35,5 +35,7 @@ namespace MZMTIN002 {
         vector<unsigned int> generateHistogram(const vector<unsigned char>& grayPixels) const; // generate histogram to be used for clustering.
 
         pixel& get(unsigned int a, unsigned int b, vector<pixel>& myPixel) const; // get pixel data at (a, b)
+
+        int getSize();
     };
 }
