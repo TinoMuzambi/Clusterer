@@ -2,9 +2,9 @@
 
 #include "clusterer.h"
 
-bool MZMTIN002::Clusterer::openFile() {
+bool MZMTIN002::Clusterer::readImageData() {
     ifstream ppm;
-    ppm.open(filename + "test.ppm");
+    ppm.open(filename + "eight_1.ppm");
     if (ppm.fail()) {
         cout << "Nah nigga" << endl;
         return false;
@@ -37,14 +37,15 @@ bool MZMTIN002::Clusterer::openFile() {
     ppm.close();
 
     // Test code
-    for (unsigned int i = 0; i < h; i++) {
-        for (unsigned int j = 0; j < w; j++) {
-            pixel& ref_colour = get(j, i, pixels);
-            cout << "RGB {" << (int)ref_colour.r << ", " << (int)ref_colour.g << ", " << (int)ref_colour.b << "}" << endl;
-        }
-    }
+//    for (unsigned int i = 0; i < h; i++) {
+//        for (unsigned int j = 0; j < w; j++) {
+//            pixel& ref_colour = get(j, i, pixels);
+//            cout << "RGB {" << (int)ref_colour.r << ", " << (int)ref_colour.g << ", " << (int)ref_colour.b << "}" << endl;
+//        }
+//    }
 
-    auto grayPixels = grayscale();
+    cout << "Grayscale image" << endl;
+    auto grayPixels = makeGrayscale();
     for (int i = 0; i < w * h; ++i) {
         cout << int(grayPixels[i]) << " " << endl;
     }
@@ -61,17 +62,19 @@ bool MZMTIN002::Clusterer::openFile() {
 }
 
 MZMTIN002::Clusterer::Clusterer(const string &filename, const int noClusters, const int binWidth) {
+    w = 0;
+    h = 0;
+    histogram = nullptr;
     this->noClusters = noClusters;
     this->binWidth = binWidth;
     this->filename = filename;
 }
 
-MZMTIN002::Clusterer::pixel &MZMTIN002::Clusterer::get(unsigned int a, unsigned int b, vector<pixel>& myPixel) {
+MZMTIN002::Clusterer::pixel &MZMTIN002::Clusterer::get(unsigned int a, unsigned int b, vector<pixel>& myPixel) const {
     return myPixel[(b * w) + a];
 }
 
-vector<unsigned char> MZMTIN002::Clusterer::grayscale() {
-    pixel colours{};
+vector<unsigned char> MZMTIN002::Clusterer::makeGrayscale() {
     vector<unsigned char> grayPixels;
     grayPixels.reserve(w * h);
 for (int i = 0; i < w * h; ++i) {
@@ -80,7 +83,7 @@ for (int i = 0; i < w * h; ++i) {
     return grayPixels;
 }
 
-void MZMTIN002::Clusterer::generateHistogram(vector<unsigned char> grayPixels) {
+void MZMTIN002::Clusterer::generateHistogram(const vector<unsigned char>& grayPixels) {
     int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
     histogram = new unsigned char[noEntries];
     for (int i = 0; i < noEntries; ++i) {
@@ -91,8 +94,3 @@ void MZMTIN002::Clusterer::generateHistogram(vector<unsigned char> grayPixels) {
         histogram[pos]++;
     }
 }
-//
-//bool MZMTIN002::Clusterer::inRange(int low, int high, int x) {
-//    return ((x-high)*(x-low) <= 0);
-//}
-

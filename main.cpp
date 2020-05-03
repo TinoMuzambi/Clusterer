@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     }
 
     MZMTIN002::Clusterer clusterer(dataset, noClusters, binWidth);
-    clusterer.openFile();
+    clusterer.readImageData();
 
     return 0;
 }

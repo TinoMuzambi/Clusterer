@@ -29,14 +29,12 @@ namespace MZMTIN002 {
     public:
         Clusterer(const string &filename, int noClusters, int binWidth); // constructor
 
-        bool openFile();
+        bool readImageData(); // read image data into vector of pixel.
 
-        vector<unsigned char> grayscale();
+        vector<unsigned char> makeGrayscale(); // convert image into grayscale and store in vector of unsigned chars.
 
-        void generateHistogram(vector<unsigned char> grayPixels);
+        void generateHistogram(const vector<unsigned char>& grayPixels); // generate histogram to be used for clustering.
 
-        bool inRange(int low, int high, int x);
-
-        pixel& get(unsigned int a, unsigned int b, vector<pixel>& myPixel);
+        pixel& get(unsigned int a, unsigned int b, vector<pixel>& myPixel) const; // get pixel data at (a, b)
     };
 }
