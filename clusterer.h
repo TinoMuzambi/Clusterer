@@ -29,7 +29,7 @@ namespace MZMTIN002 {
 
         bool openFile();
 
-        vector<pixel> grayscale();
+        unsigned char * grayscale();
 
         void histogram();
 

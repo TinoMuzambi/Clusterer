@@ -44,13 +44,16 @@ bool MZMTIN002::Clusterer::openFile() {
         }
     }
 
-    vector<pixel> grayPixels = grayscale();
-    for (unsigned int i = 0; i < h; i++) {
-        for (unsigned int j = 0; j < w; j++) {
-            pixel& ref_colour = get(j, i, grayPixels);
-            cout << "RGB {" << (int)ref_colour.r << ", " << (int)ref_colour.g << ", " << (int)ref_colour.b << "}" << endl;
-        }
+    auto grayPixels = grayscale();
+    for (int i = 0; i < w * h; ++i) {
+        cout << int(grayPixels[i]) << " " << endl;
     }
+//    for (unsigned int i = 0; i < h; i++) {
+//        for (unsigned int j = 0; j < w; j++) {
+//            pixel& ref_colour = get(j, i, grayPixels);
+//            cout << "RGB {" << (int)ref_colour.r << ", " << (int)ref_colour.g << ", " << (int)ref_colour.b << "}" << endl;
+//        }
+//    }
 
     return true;
 }
@@ -65,15 +68,15 @@ MZMTIN002::Clusterer::pixel &MZMTIN002::Clusterer::get(unsigned int a, unsigned 
     return myPixel[(b * w) + a];
 }
 
-vector <MZMTIN002::Clusterer::pixel> MZMTIN002::Clusterer::grayscale() {
-    vector<pixel> grayPixels;
+unsigned char * MZMTIN002::Clusterer::grayscale() {
+    unsigned char *grayPixels;
     pixel colours{};
+    grayPixels = new unsigned char[w * h];
     for (int i = 0; i < w * h; ++i) {
-        colours.r = pixels[i].r * 0.21;
-        colours.g = pixels[i].g * 0.72;
-        colours.b = pixels[i].b * 0.07;
-
-        grayPixels.push_back(colours);
+        grayPixels[i] = pixels[i].r * 0.21 + pixels[i].g * 0.72 + pixels[i].b * 0.07;
+//        colours.r = pixels[i].r * 0.21; // Add these suckers into a single pixel value.
+//        colours.g = pixels[i].g * 0.72;
+//        colours.b = pixels[i].b * 0.07;
     }
 
     return grayPixels;
