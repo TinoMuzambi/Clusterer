@@ -7,9 +7,9 @@ using namespace std;
 #include "string"
 #include "clusterer.h"
 
-string exec(string command) {
+string exec(const string& command) {
     char buffer[128];
-    string result = "";
+    string result;
 
     // Open pipe to file
     FILE* pipe = popen(command.c_str(), "r");
@@ -21,7 +21,7 @@ string exec(string command) {
     while (!feof(pipe)) {
 
         // use buffer to read and add to result
-        if (fgets(buffer, 128, pipe) != NULL)
+        if (fgets(buffer, 128, pipe) != nullptr)
             result += buffer;
     }
 
@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
     int noClusters = 10;
     int binWidth = 1;
     if (argc == 2) {
-        dataset = argv[1]; // Gradient_Numbers_PPMS/ -o data.txt -k 5 -bin 5
+        dataset = argv[1]; // Gradient_Numbers_PPMS/ -bin 70
     }
     else if (argc > 2) {
         dataset = argv[1];
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
         files.push_back(token);
     }
 
-    vector<vector<unsigned int>> histograms;
+    vector<vector<unsigned int>*> histograms;
     for (int i = 0; i < files.size(); ++i) {
         MZMTIN002::Clusterer clusterer(dataset + files[i], noClusters, binWidth);
         clusterer.readImageData();
@@ -80,14 +80,12 @@ int main(int argc, char* argv[]) {
 
         cout << "Histogram #" << i << endl;
         int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
-        for (int i = 0; i < noEntries; ++i) {
-            cout << i << " - " << int(histogram[i]) << " " << endl;
+        for (int j = 0; j < noEntries; ++j) {
+            cout << j << " - " << int(histogram[j]) << " " << endl;
         }
 
-        histograms.push_back(histogram);
+        histograms.push_back(&histogram);
     }
-
-    cout << "final histogram size: " << histograms.size() << endl;
 
     return 0;
 }
