@@ -56,6 +56,7 @@ int main(int argc, char* argv[]) {
         cout << "Please provide the necessary requirements." << endl;
         return 1;
     }
+    static const int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
 
     string ls = exec("ls " + dataset);
     stringstream line (ls);
@@ -83,7 +84,7 @@ int main(int argc, char* argv[]) {
 
         double histDistance(hist oHist) const {
             double sum = 0;
-            for (int i = 0; i < 4; ++i) {
+            for (int i = 0; i < noEntries; ++i) {
                 int diff = histogram[i] - oHist.histogram[i];
                 sum += pow(diff, 2.0);
             }
@@ -105,7 +106,6 @@ int main(int argc, char* argv[]) {
         unsigned int* histogram = clusterer.generateHistogram(grayPixels);
 
         cout << "Histogram #" << i << endl;
-        int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
         for (int j = 0; j < noEntries; ++j) {
             cout << j << " - " << int(histogram[j]) << " " << endl;
         }
