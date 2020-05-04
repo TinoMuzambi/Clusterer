@@ -55,6 +55,14 @@ MZMTIN002::Clusterer::Clusterer(const string &filename, const int noClusters, co
     this->filename = filename;
 }
 
+MZMTIN002::Clusterer::Clusterer() {
+    w = 0;
+    h = 0;
+    this->noClusters = 0;
+    this->binWidth = 0;
+    this->filename = "";
+}
+
 MZMTIN002::Clusterer::pixel &MZMTIN002::Clusterer::get(unsigned int a, unsigned int b, vector<pixel>& myPixel) const {
     return myPixel[(b * w) + a];
 }
@@ -87,30 +95,42 @@ int MZMTIN002::Clusterer::getSize() const {
     return w * h;
 }
 
-MZMTIN002::Clusterer::Clusterer() {
+vector<MZMTIN002::Clusterer::hist> MZMTIN002::Clusterer::kMeans(vector <hist> hists, int noIterations) {
+    vector<hist> centroids; // Initialising the clusters
+    srand(time(0));
+    centroids.reserve(noClusters);
+    for (int i = 0; i < noClusters; ++i) {
+        centroids.push_back(hists.at(rand() % hists.size()));
+    }
 
+    for (int i = 0; i < noIterations; ++i) {
+        for (auto iter = begin(centroids); iter != end(centroids); iter++) { // Assigning points to a cluster
+            int clusterID = iter - begin(centroids);
+
+            for (auto &iter2 : hists) {
+                hist hist = iter2;
+                double dist = iter->histDistance(hist);
+                if (dist < hist.minDistance) {
+                    hist.minDistance = dist;
+                    hist.clusterID = clusterID;
+                }
+                iter2 = hist;
+            }
+        }
+//
+//        for (auto &hist : hists) {
+//            hist.minDistance = __DBL_MAX__;
+//        }
+//
+//        for (auto iter = begin(centroids); iter != end(centroids); iter++) {
+//            int clusterID = iter - begin(centroids);
+//
+//        }
+    }
+
+    return hists;
 }
 
-void MZMTIN002::Clusterer::kMeans(vector <hist> hists, int noIterations) {
-    vector<hist> centroids; // Initialising the clusters
-
-    srand(time(0));
-    for (int i = 0; i < noClusters; ++i) {
-        centroids.push_back(hists.at(rand() % noClusters));
-    }
-
-    for (auto iter = begin(centroids); iter != end(centroids); iter++) { // Assigning points to a cluster
-        int clusterID = iter - begin(centroids);
-
-        for (auto iter2 = hists.begin(); iter2 != hists.end(); iter2++) {
-            hist hist = *iter2;
-            double dist = iter->histDistance(hist);
-            if (dist < hist.minDistance) {
-                hist.minDistance = dist;
-                hist.clusterID = clusterID;
-            }
-            *iter2 = hist;
-        }
-
-    }
+void MZMTIN002::Clusterer::setNoClusters(int noClustersToSet) {
+    this->noClusters = noClustersToSet;
 }

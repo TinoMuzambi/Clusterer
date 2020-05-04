@@ -29,22 +29,26 @@ namespace MZMTIN002 {
     public:
         struct hist {
             unsigned int *histogram;
+            string name;
             int clusterID, noEntries;
             double minDistance;
 
             hist():
                     histogram(nullptr),
+                    name(""),
                     clusterID(-1),
+                    noEntries(-1),
                     minDistance(__DBL_MAX__) {}
 
-            hist(unsigned int* histogram, int noEntries):
+            hist(unsigned int* histogram, int noEntries, string name):
                     histogram(histogram),
                     clusterID(-1),
                     noEntries(noEntries),
+                    name(std::move(name)),
                     minDistance(__DBL_MAX__) {}
 
 
-            double histDistance(hist oHist) const {
+            double histDistance(const hist& oHist) const {
                 double sum = 0;
                 for (int i = 0; i < noEntries; ++i) {
                     int diff = histogram[i] - oHist.histogram[i];
@@ -58,13 +62,15 @@ namespace MZMTIN002 {
 
         Clusterer(const string &filename, int noClusters, int binWidth); // constructor
 
+        void setNoClusters(int noClustersToSet);
+
         bool readImageData(); // read image data into vector of pixel.
 
         vector<unsigned char> makeGrayscale(); // convert image into grayscale and store in vector of unsigned chars.
 
         unsigned int * generateHistogram(const vector<unsigned char>& grayPixels) const; // generate histogram to be used for clustering.
 
-        void kMeans(vector<hist> hists, int noIterations);
+        vector<hist> kMeans(vector<hist> hists, int noIterations);
 
         pixel& get(unsigned int a, unsigned int b, vector<pixel>& myPixel) const; // get pixel data at (a, b)
 

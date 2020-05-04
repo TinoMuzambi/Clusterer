@@ -66,36 +66,10 @@ int main(int argc, char* argv[]) {
         files.push_back(token);
     }
 
-    struct hist {
-        unsigned int *histogram;
-        int clusterID, noEntries;
-        double minDistance;
-
-        hist():
-                histogram(nullptr),
-                clusterID(-1),
-                minDistance(__DBL_MAX__) {}
-
-        hist(unsigned int* histogram, int noEntries):
-                histogram(histogram),
-                clusterID(-1),
-                noEntries(noEntries),
-                minDistance(__DBL_MAX__) {}
-
-
-        double histDistance(hist oHist) const {
-            double sum = 0;
-            for (int i = 0; i < noEntries; ++i) {
-                int diff = histogram[i] - oHist.histogram[i];
-                sum += pow(diff, 2.0);
-            }
-            return sqrt(sum);
-        }
-    };
-
-    vector<hist> histograms;
-    for (int i = 0; i < files.size(); ++i) {
-        MZMTIN002::Clusterer clusterer(dataset + files[i], noClusters, binWidth);
+    MZMTIN002::Clusterer clusterer;
+    vector<MZMTIN002::Clusterer::hist> histograms;
+    for (const auto & file : files) {
+        MZMTIN002::Clusterer clusterer(dataset + file, noClusters, binWidth);
         clusterer.readImageData();
 
         auto grayPixels = clusterer.makeGrayscale();
@@ -106,12 +80,26 @@ int main(int argc, char* argv[]) {
 
         unsigned int* histogram = clusterer.generateHistogram(grayPixels);
 
-        cout << "Histogram #" << i << endl;
-        for (int j = 0; j < noEntries; ++j) {
-            cout << j << " - " << int(histogram[j]) << " " << endl;
-        }
+//        cout << "Histogram #" << i << endl;
+//        for (int j = 0; j < noEntries; ++j) {
+//            cout << j << " - " << int(histogram[j]) << " " << endl;
+//        }
 
-        histograms.emplace_back(hist(histogram, noEntries));
+        histograms.emplace_back(MZMTIN002::Clusterer::hist(histogram, noEntries, file));
+    }
+
+    clusterer.setNoClusters(noClusters);
+    vector<MZMTIN002::Clusterer::hist>  clusters = clusterer.kMeans(histograms, 10);
+
+    for (int i = 0; i < noClusters; ++i) {
+        cout << "cluster" << i << ": ";
+        for (auto& cluster : clusters) {
+            if (cluster.clusterID == i) {
+                cout << cluster.name << " ";
+            }
+        }
+        cout << endl;
+        cout << endl;
     }
 
     return 0;
