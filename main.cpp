@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 
     struct hist {
         unsigned int *histogram;
-        int clusterID;
+        int clusterID, noEntries;
         double minDistance;
 
         hist():
@@ -76,9 +76,10 @@ int main(int argc, char* argv[]) {
                 clusterID(-1),
                 minDistance(__DBL_MAX__) {}
 
-        hist(unsigned int* histogram):
+        hist(unsigned int* histogram, int noEntries):
                 histogram(histogram),
                 clusterID(-1),
+                noEntries(noEntries),
                 minDistance(__DBL_MAX__) {}
 
 
@@ -110,7 +111,7 @@ int main(int argc, char* argv[]) {
             cout << j << " - " << int(histogram[j]) << " " << endl;
         }
 
-        histograms.emplace_back(histogram);
+        histograms.emplace_back(hist(histogram, noEntries));
     }
 
     return 0;

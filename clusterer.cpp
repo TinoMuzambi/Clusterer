@@ -86,3 +86,31 @@ unsigned int * MZMTIN002::Clusterer::generateHistogram(const vector<unsigned cha
 int MZMTIN002::Clusterer::getSize() const {
     return w * h;
 }
+
+MZMTIN002::Clusterer::Clusterer() {
+
+}
+
+void MZMTIN002::Clusterer::kMeans(vector <hist> hists, int noIterations) {
+    vector<hist> centroids; // Initialising the clusters
+
+    srand(time(0));
+    for (int i = 0; i < noClusters; ++i) {
+        centroids.push_back(hists.at(rand() % noClusters));
+    }
+
+    for (auto iter = begin(centroids); iter != end(centroids); iter++) { // Assigning points to a cluster
+        int clusterID = iter - begin(centroids);
+
+        for (auto iter2 = hists.begin(); iter2 != hists.end(); iter2++) {
+            hist hist = *iter2;
+            double dist = iter->histDistance(hist);
+            if (dist < hist.minDistance) {
+                hist.minDistance = dist;
+                hist.clusterID = clusterID;
+            }
+            *iter2 = hist;
+        }
+
+    }
+}

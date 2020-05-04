@@ -27,6 +27,35 @@ namespace MZMTIN002 {
         };
         vector<pixel> pixels;
     public:
+        struct hist {
+            unsigned int *histogram;
+            int clusterID, noEntries;
+            double minDistance;
+
+            hist():
+                    histogram(nullptr),
+                    clusterID(-1),
+                    minDistance(__DBL_MAX__) {}
+
+            hist(unsigned int* histogram, int noEntries):
+                    histogram(histogram),
+                    clusterID(-1),
+                    noEntries(noEntries),
+                    minDistance(__DBL_MAX__) {}
+
+
+            double histDistance(hist oHist) const {
+                double sum = 0;
+                for (int i = 0; i < noEntries; ++i) {
+                    int diff = histogram[i] - oHist.histogram[i];
+                    sum += pow(diff, 2.0);
+                }
+                return sqrt(sum);
+            }
+        };
+
+        Clusterer();
+
         Clusterer(const string &filename, int noClusters, int binWidth); // constructor
 
         bool readImageData(); // read image data into vector of pixel.
@@ -34,6 +63,8 @@ namespace MZMTIN002 {
         vector<unsigned char> makeGrayscale(); // convert image into grayscale and store in vector of unsigned chars.
 
         unsigned int * generateHistogram(const vector<unsigned char>& grayPixels) const; // generate histogram to be used for clustering.
+
+        void kMeans(vector<hist> hists, int noIterations);
 
         pixel& get(unsigned int a, unsigned int b, vector<pixel>& myPixel) const; // get pixel data at (a, b)
 
