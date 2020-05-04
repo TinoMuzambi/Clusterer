@@ -100,7 +100,9 @@ vector<MZMTIN002::Clusterer::hist> MZMTIN002::Clusterer::kMeans(vector <hist> hi
     srand(time(0));
     centroids.reserve(noClusters);
     for (int i = 0; i < noClusters; ++i) {
-        centroids.push_back(hists.at(rand() % hists.size()));
+        hist tempHist = hists.at(rand() % hists.size());
+        tempHist.clusterID = i;
+        centroids.push_back(tempHist);
     }
 
     for (auto& hist : hists) { // Assign each data point to one of K clusters.
@@ -121,6 +123,30 @@ vector<MZMTIN002::Clusterer::hist> MZMTIN002::Clusterer::kMeans(vector <hist> hi
                 }
                 iter2 = hist;
             }
+        }
+
+        // Update centroids.
+        for (auto& centroid : centroids) {
+            int sum = 0;
+            vector<int> sums;
+            sums.reserve(centroid.noEntries);
+            for (int l = 0; l < centroid.noEntries; ++l) {
+                sums[i] = 0;
+            }
+            for (auto& hist : hists) {
+                if (hist.clusterID == centroid.clusterID) {
+                    for (int j = 0; j < sizeof(hist.histogram); ++j) {
+                        for (int k = 0; k < centroid.noEntries; ++k) {
+                            sums[k] += hist.histogram[k]; 
+                        }
+                    }
+                }
+            }
+            auto *newHist = new unsigned int[centroid.noEntries];
+            for (int m = 0; m < centroid.noEntries; ++m) {
+                newHist[m] = sums[m]/centroid.noEntries;
+            }
+            centroid.histogram = newHist;
         }
 
 
