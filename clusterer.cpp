@@ -83,6 +83,6 @@ vector<unsigned int> MZMTIN002::Clusterer::generateHistogram(const vector<unsign
     return histogram;
 }
 
-int MZMTIN002::Clusterer::getSize() {
+int MZMTIN002::Clusterer::getSize() const {
     return w * h;
 }
