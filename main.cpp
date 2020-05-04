@@ -65,7 +65,33 @@ int main(int argc, char* argv[]) {
         files.push_back(token);
     }
 
-    vector<unsigned int*> histograms;
+    struct hist {
+        unsigned int *histogram;
+        int clusterID;
+        double minDistance;
+
+        hist():
+                histogram(nullptr),
+                clusterID(-1),
+                minDistance(__DBL_MAX__) {}
+
+        hist(unsigned int* histogram):
+                histogram(histogram),
+                clusterID(-1),
+                minDistance(__DBL_MAX__) {}
+
+
+        double histDistance(hist oHist) const {
+            double sum = 0;
+            for (int i = 0; i < 4; ++i) {
+                int diff = histogram[i] - oHist.histogram[i];
+                sum += pow(diff, 2.0);
+            }
+            return sqrt(sum);
+        }
+    };
+
+    vector<hist> histograms;
     for (int i = 0; i < files.size(); ++i) {
         MZMTIN002::Clusterer clusterer(dataset + files[i], noClusters, binWidth);
         clusterer.readImageData();
@@ -84,15 +110,8 @@ int main(int argc, char* argv[]) {
             cout << j << " - " << int(histogram[j]) << " " << endl;
         }
 
-        histograms.push_back(histogram);
+        histograms.emplace_back(histogram);
     }
-
-    unsigned int sum = 0;
-    for (int k = 0; k < 4; ++k) {
-        sum += histograms[100][k];
-    }
-    cout << "Mean for 100th histogram is " << sum / 4 << endl;
-
 
     return 0;
 }
