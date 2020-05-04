@@ -96,15 +96,20 @@ int MZMTIN002::Clusterer::getSize() const {
 }
 
 vector<MZMTIN002::Clusterer::hist> MZMTIN002::Clusterer::kMeans(vector <hist> hists, int noIterations) {
-    vector<hist> centroids; // Initialising the clusters
+    vector<hist> centroids; // Initialising the clusters.
     srand(time(0));
     centroids.reserve(noClusters);
     for (int i = 0; i < noClusters; ++i) {
         centroids.push_back(hists.at(rand() % hists.size()));
     }
 
+    for (auto& hist : hists) { // Assign each data point to one of K clusters.
+        hist.clusterID = rand() % noClusters;
+    }
+
+    //BEGIN OF LOOP
     for (int i = 0; i < noIterations; ++i) {
-        for (auto iter = begin(centroids); iter != end(centroids); iter++) { // Assigning points to a cluster
+        for (auto iter = begin(centroids); iter != end(centroids); iter++) { // Assigning points to a centroid.
             int clusterID = iter - begin(centroids);
 
             for (auto &iter2 : hists) {
@@ -117,15 +122,20 @@ vector<MZMTIN002::Clusterer::hist> MZMTIN002::Clusterer::kMeans(vector <hist> hi
                 iter2 = hist;
             }
         }
-//
-//        for (auto &hist : hists) {
-//            hist.minDistance = __DBL_MAX__;
-//        }
-//
-//        for (auto iter = begin(centroids); iter != end(centroids); iter++) {
-//            int clusterID = iter - begin(centroids);
-//
-//        }
+
+
+    }
+
+    cout << "Before k-means" << endl;
+    for (int i = 0; i < noClusters; ++i) {
+        cout << "cluster" << i << ": ";
+        for (auto& cluster : hists) {
+            if (cluster.clusterID == i) {
+                cout << cluster.name << " ";
+            }
+        }
+        cout << endl;
+        cout << endl;
     }
 
     return hists;

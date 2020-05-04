@@ -89,8 +89,9 @@ int main(int argc, char* argv[]) {
     }
 
     clusterer.setNoClusters(noClusters);
-    vector<MZMTIN002::Clusterer::hist>  clusters = clusterer.kMeans(histograms, 10);
+    vector<MZMTIN002::Clusterer::hist>  clusters = clusterer.kMeans(histograms, 4);
 
+    cout << "After k-means" << endl;
     for (int i = 0; i < noClusters; ++i) {
         cout << "cluster" << i << ": ";
         for (auto& cluster : clusters) {
