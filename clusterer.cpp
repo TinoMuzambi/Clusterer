@@ -68,10 +68,10 @@ for (int i = 0; i < w * h; ++i) {
     return grayPixels;
 }
 
-vector<unsigned int> MZMTIN002::Clusterer::generateHistogram(const vector<unsigned char>& grayPixels) const {
-    vector<unsigned int> histogram;
+unsigned int * MZMTIN002::Clusterer::generateHistogram(const vector<unsigned char>& grayPixels) const {
+    unsigned int* histogram;
     int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
-    histogram.reserve(noEntries);
+    histogram = new unsigned int[noEntries];
     for (int i = 0; i < noEntries; ++i) {
         histogram[i] = 0;
     }

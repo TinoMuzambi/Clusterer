@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
         files.push_back(token);
     }
 
-    vector<vector<unsigned int>*> histograms;
+    vector<unsigned int*> histograms;
     for (int i = 0; i < files.size(); ++i) {
         MZMTIN002::Clusterer clusterer(dataset + files[i], noClusters, binWidth);
         clusterer.readImageData();
@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
 //            cout << int(grayPixels[i])<< " " << endl;
 //        }
 
-        vector<unsigned int> histogram = clusterer.generateHistogram(grayPixels);
+        unsigned int* histogram = clusterer.generateHistogram(grayPixels);
 
         cout << "Histogram #" << i << endl;
         int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
@@ -84,8 +84,15 @@ int main(int argc, char* argv[]) {
             cout << j << " - " << int(histogram[j]) << " " << endl;
         }
 
-        histograms.push_back(&histogram);
+        histograms.push_back(histogram);
     }
+
+    unsigned int sum = 0;
+    for (int k = 0; k < 4; ++k) {
+        sum += histograms[100][k];
+    }
+    cout << "Mean for 100th histogram is " << sum / 4 << endl;
+
 
     return 0;
 }
