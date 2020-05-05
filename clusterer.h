@@ -10,7 +10,6 @@ using namespace std;
 #include <cmath>
 #include <cstring>
 #include <fstream>
-#include <utility>
 #include <vector>
 
 namespace MZMTIN002 {
@@ -32,7 +31,6 @@ namespace MZMTIN002 {
             string name;
             int clusterID, noEntries;
             double minDistance;
-
             hist():
                     name(""),
                     clusterID(-1),
@@ -56,26 +54,22 @@ namespace MZMTIN002 {
             }
         };
 
-        Clusterer();
+        Clusterer(); // default constructor.
 
         Clusterer(const string &filename, int noClusters, int binWidth); // constructor
 
         void setNoClusters(int noClustersToSet); // set method for noClusters
 
-        vector<hist> clusters;
+        vector<hist> clusters; // current clustering of the images.
 
-        friend ostream& operator<< (ostream& os, const Clusterer& kt);
+        friend ostream& operator<< (ostream& os, const Clusterer& kt); // overloading << operator.
 
         bool readImageData(); // read image data into vector of pixel.
 
-        vector<unsigned char> makeGrayscale(); // convert image into grayscale and store in vector of unsigned chars.
+        vector<unsigned int> makeGrayscale(); // convert image into grayscale and store in vector of unsigned chars.
 
-        vector<unsigned int> generateHistogram(const vector<unsigned char>& grayPixels) const; // generate histogram to be used for clustering.
+        vector<unsigned int> generateHistogram(vector<unsigned int> &grayPixels) const; // generate histogram to be used for clustering.
 
-        void kMeans(vector<hist> hists, int noIterations);
-
-        pixel& get(unsigned int a, unsigned int b, vector<pixel>& myPixel) const; // get pixel data at (a, b)
-
-        int getSize() const; // return total number of pixels, width * height
+        void kMeans(vector <hist> hists); // k-means method.
     };
 }
