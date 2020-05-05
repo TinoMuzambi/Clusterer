@@ -87,7 +87,6 @@ int main(int argc, char* argv[]) {
 
     clusterer.setNoClusters(noClusters);
     clusterer.kMeans(histograms);
-    cout << "8" << endl;
 
     cout << "After k-means" << endl;
     cout << clusterer << endl;

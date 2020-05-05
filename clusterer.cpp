@@ -74,7 +74,7 @@ bool MZMTIN002::Clusterer::readImageData() {
  */
 vector<unsigned int> MZMTIN002::Clusterer::makeGrayscale() {
     vector<unsigned int> grayPixels;
-    grayPixels.reserve(w * h);
+    grayPixels.resize(w * h);
 for (int i = 0; i < w * h; ++i) {
         grayPixels.push_back((pixels[i].r * 0.21) + (pixels[i].g * 0.72) + (pixels[i].b * 0.07));
     }
@@ -89,7 +89,7 @@ for (int i = 0; i < w * h; ++i) {
 vector<unsigned int> MZMTIN002::Clusterer::generateHistogram(vector<unsigned int> &grayPixels) const {
     vector<unsigned int> histogram;
     int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
-    histogram.reserve(noEntries);
+    histogram.resize(noEntries);
     for (int i = 0; i < noEntries; ++i) {
         histogram.push_back(0);
     }
@@ -108,12 +108,12 @@ vector<unsigned int> MZMTIN002::Clusterer::generateHistogram(vector<unsigned int
 void MZMTIN002::Clusterer::kMeans(vector <hist> hists) {
     vector<vector<unsigned int>> centroids; // Initialising the clusters.
     srand(time(0));
-    centroids.reserve(noClusters);
+    centroids.resize(noClusters);
 
     for (int i = 0; i < noClusters; ++i) {
         hist tempHist = hists.at(rand() % hists.size());
         tempHist.clusterID = i;
-        centroids.push_back(tempHist.histogram);
+        centroids.at(i) = tempHist.histogram;
     }
 
     for (auto& hist : hists) { // Assign each data point to one of K clusters.
@@ -125,7 +125,7 @@ void MZMTIN002::Clusterer::kMeans(vector <hist> hists) {
     cout << *this << endl;
 
     //BEGIN OF LOOP
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 20; ++i) {
         for (auto& hist : hists) {
             for (int j = 0; j < centroids.size(); ++j) {
                 double dist = hist.histDistance(centroids[j]);
@@ -137,19 +137,19 @@ void MZMTIN002::Clusterer::kMeans(vector <hist> hists) {
         }
 
         vector<vector<unsigned int>> newCentroids; // here. setting up vectors for new centroids.
-        newCentroids.reserve(noClusters);
+        newCentroids.resize(noClusters);
         vector<unsigned int> newCentroid; // essentially a new histogram
-        newCentroid.reserve(centroids[0].size());
+        newCentroid.resize(centroids[0].size());
         vector<int> noCentroids;
-        noCentroids.reserve(noClusters);
+        noCentroids.resize(noClusters);
         for (int k = 0; k < centroids[0].size(); ++k) {
-            newCentroid.push_back(0);
+            newCentroid.at(k) = 0;
         }
         for (int l = 0; l < noClusters; ++l) {
-            newCentroids.push_back(newCentroid);
+            newCentroids.at(l) = newCentroid;
         }
         for (int m = 0; m < noClusters; ++m) {
-            noCentroids.push_back(0);
+            noCentroids.at(m) = 0;
         }
 
         for (auto& hist : hists) { // summing up values.
@@ -171,10 +171,7 @@ void MZMTIN002::Clusterer::kMeans(vector <hist> hists) {
             }
         }
 
-        for (int n = 0; n < newCentroids.size(); ++n) { // updating the centroids.
-            cout << n << endl;
-            centroids.at(n) = newCentroids[n];
-        }
+        newCentroids.swap(centroids);
     }
 
     clusters = hists; // updating the current clustering.
