@@ -11,6 +11,7 @@ using namespace std;
  * Execute terminal commands from within program and return result.
  * In this case, being used to get the names of all the files in the
  * dataset directory.
+ * https://www.tutorialspoint.com/How-to-execute-a-command-and-get-the-output-of-command-within-Cplusplus-using-POSIX
  * @param command command to be executed in terminal
  * @return output from running command.
  */
@@ -23,7 +24,6 @@ string exec(const string& command) {
     }
 
     while (!feof(pipe)) {
-        // use buffer to read and add to result
         if (fgets(buffer, 128, pipe) != nullptr)
             result += buffer;
     }
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
     }
     else if (argc > 2) {
         dataset = argv[1];
-        for (int i = 2; i < argc; i += 2) { // Sorting out i/o.
+        for (int i = 2; i < argc; i += 2) { // sorting out i/o.
             char curr = string(argv[i])[1];
             if (curr== 'o') {
                 output = string(argv[i + 1]);

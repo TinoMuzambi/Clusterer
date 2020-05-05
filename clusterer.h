@@ -60,7 +60,7 @@ namespace MZMTIN002 {
 
         void setNoClusters(int noClustersToSet); // set method for noClusters
 
-        vector<hist> clusters; // current clustering of the images.
+        vector<hist> clusters; // represents current clustering of the images.
 
         friend ostream& operator<< (ostream& os, const Clusterer& kt); // overloading << operator.
 
@@ -71,5 +71,7 @@ namespace MZMTIN002 {
         vector<unsigned int> generateHistogram(vector<unsigned int> &grayPixels) const; // generate histogram to be used for clustering.
 
         void kMeans(vector <hist> hists); // k-means method.
+
+        bool shouldStop(vector <hist> oldCluster, vector <hist> newCluster, bool first); // determine when to stop iterating k-means.
     };
 }

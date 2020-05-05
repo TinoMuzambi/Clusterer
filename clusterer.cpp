@@ -76,7 +76,7 @@ vector<unsigned int> MZMTIN002::Clusterer::makeGrayscale() {
     vector<unsigned int> grayPixels;
     grayPixels.resize(w * h);
 for (int i = 0; i < w * h; ++i) {
-        grayPixels.push_back((pixels[i].r * 0.21) + (pixels[i].g * 0.72) + (pixels[i].b * 0.07));
+        grayPixels.at(i) = (pixels[i].r * 0.21) + (pixels[i].g * 0.72) + (pixels[i].b * 0.07);
     }
     return grayPixels;
 }
@@ -91,7 +91,7 @@ vector<unsigned int> MZMTIN002::Clusterer::generateHistogram(vector<unsigned int
     int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
     histogram.resize(noEntries);
     for (int i = 0; i < noEntries; ++i) {
-        histogram.push_back(0);
+        histogram.insert(histogram.begin(), 0);
     }
     for (unsigned char grayPixel : grayPixels) {
         int pos = grayPixel / binWidth;
@@ -124,8 +124,13 @@ void MZMTIN002::Clusterer::kMeans(vector <hist> hists) {
     cout << "Before k-means" << endl;
     cout << *this << endl;
 
+    vector<hist> old = hists;
+    bool first = true;
+
     //BEGIN OF LOOP
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 5; ++i) {
+        first = false;
+        old = clusters;
         for (auto& hist : hists) {
             for (int j = 0; j < centroids.size(); ++j) {
                 double dist = hist.histDistance(centroids[j]);
@@ -136,9 +141,9 @@ void MZMTIN002::Clusterer::kMeans(vector <hist> hists) {
             }
         }
 
-        vector<vector<unsigned int>> newCentroids; // here. setting up vectors for new centroids.
+        vector<vector<unsigned int>> newCentroids; // setting up vectors for new centroids.
         newCentroids.resize(noClusters);
-        vector<unsigned int> newCentroid; // essentially a new histogram
+        vector<unsigned int> newCentroid;
         newCentroid.resize(centroids[0].size());
         vector<int> noCentroids;
         noCentroids.resize(noClusters);
@@ -172,9 +177,10 @@ void MZMTIN002::Clusterer::kMeans(vector <hist> hists) {
         }
 
         newCentroids.swap(centroids);
+
+        clusters = hists; // updating the current clustering.
     }
 
-    clusters = hists; // updating the current clustering.
 }
 
 /**
@@ -203,5 +209,43 @@ ostream &MZMTIN002::operator<<(ostream &os, const MZMTIN002::Clusterer &kt) {
         os << endl;
     }
     return os;
+}
+
+/**
+ * Determines when to stop iterations of k-means by comparing standard deviations.
+ * @param oldCluster vector representing old clusters.
+ * @param newCluster vector representing current clusters.
+ * @param first determines whether it is the first iteration, in which we don't calculate and return false.
+ * @return true if std devs are reasonably close i.e stop iterating, else false i.e continue iterating.
+ */
+bool MZMTIN002::Clusterer::shouldStop(vector <hist> oldCluster, vector <hist> newCluster, bool first) {
+    double sum1 = 0.0;
+    double sum2 = 0.0;
+    double stdDev1 = 0.0;
+    double stdDev2 = 0.0;
+    int count = 0;
+    if (!first) {
+        for (int i = 0; i < oldCluster.size(); ++i) {
+            sum1 += oldCluster.at(i).clusterID;
+            sum2 += newCluster.at(i).clusterID;
+            count++;
+        }
+
+        double mean1 = sum1 / count;
+        double mean2 = sum2 / count;
+
+        for (int i = 0; i < oldCluster.size(); ++i) {
+            stdDev1 += pow(oldCluster.at(i).clusterID - mean1, 2);
+            stdDev2 += pow(newCluster.at(i).clusterID - mean2, 2);
+        }
+
+        stdDev1 = sqrt(stdDev1);
+        stdDev2 = sqrt(stdDev2);
+
+        cout << stdDev1 << endl;
+        cout << stdDev2 << endl;
+    }
+
+    return abs(stdDev1 - stdDev2) < 6;
 }
 
