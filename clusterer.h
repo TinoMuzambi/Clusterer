@@ -46,11 +46,10 @@ namespace MZMTIN002 {
                     name(std::move(name)),
                     minDistance(__DBL_MAX__) {}
 
-
             double histDistance(const vector<unsigned int>& oHistogram) const {
                 double sum = 0;
                 for (int i = 0; i < noEntries; ++i) {
-                    int diff = histogram[i] - oHistogram[i];
+                    unsigned int diff = histogram[i] - oHistogram[i];
                     sum += pow(diff, 2.0);
                 }
                 return sqrt(sum);
@@ -61,7 +60,11 @@ namespace MZMTIN002 {
 
         Clusterer(const string &filename, int noClusters, int binWidth); // constructor
 
-        void setNoClusters(int noClustersToSet);
+        void setNoClusters(int noClustersToSet); // set method for noClusters
+
+        vector<hist> clusters;
+
+        friend ostream& operator<< (ostream& os, const Clusterer& kt);
 
         bool readImageData(); // read image data into vector of pixel.
 
@@ -69,7 +72,7 @@ namespace MZMTIN002 {
 
         vector<unsigned int> generateHistogram(const vector<unsigned char>& grayPixels) const; // generate histogram to be used for clustering.
 
-        vector<hist> kMeans(vector<hist> hists, int noIterations);
+        void kMeans(vector<hist> hists, int noIterations);
 
         pixel& get(unsigned int a, unsigned int b, vector<pixel>& myPixel) const; // get pixel data at (a, b)
 

@@ -89,20 +89,21 @@ int main(int argc, char* argv[]) {
     }
 
     clusterer.setNoClusters(noClusters);
-    vector<MZMTIN002::Clusterer::hist>  clusters = clusterer.kMeans(histograms, 10);
+    clusterer.kMeans(histograms, 10);
     cout << "8" << endl;
 
     cout << "After k-means" << endl;
-    for (int i = 0; i < noClusters; ++i) {
-        cout << "cluster" << i << ": ";
-        for (auto& cluster : clusters) {
-            if (cluster.clusterID == i) {
-                cout << cluster.name << " ";
-            }
-        }
-        cout << endl;
-        cout << endl;
-    }
+    cout << clusterer << endl;
+//    for (int i = 0; i < noClusters; ++i) {
+//        cout << "cluster" << i << ": ";
+//        for (auto& cluster : clusters) {
+//            if (cluster.clusterID == i) {
+//                cout << cluster.name << " ";
+//            }
+//        }
+//        cout << endl;
+//        cout << endl;
+//    }
 
     return 0;
 }

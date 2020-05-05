@@ -50,7 +50,7 @@ bool MZMTIN002::Clusterer::readImageData() {
 MZMTIN002::Clusterer::Clusterer(const string &filename, const int noClusters, const int binWidth) {
     w = 0;
     h = 0;
-    this->noClusters = noClusters;
+    MZMTIN002::Clusterer::noClusters = noClusters;
     this->binWidth = binWidth;
     this->filename = filename;
 }
@@ -58,7 +58,7 @@ MZMTIN002::Clusterer::Clusterer(const string &filename, const int noClusters, co
 MZMTIN002::Clusterer::Clusterer() {
     w = 0;
     h = 0;
-    this->noClusters = 0;
+    MZMTIN002::Clusterer::noClusters = 0;
     this->binWidth = 0;
     this->filename = "";
 }
@@ -95,7 +95,7 @@ int MZMTIN002::Clusterer::getSize() const {
     return w * h;
 }
 
-vector<MZMTIN002::Clusterer::hist> MZMTIN002::Clusterer::kMeans(vector <hist> hists, int noIterations) {
+void MZMTIN002::Clusterer::kMeans(vector <hist> hists, int noIterations) {
     vector<vector<unsigned int>> centroids; // Initialising the clusters.
     srand(time(0));
     centroids.reserve(noClusters);
@@ -110,17 +110,19 @@ vector<MZMTIN002::Clusterer::hist> MZMTIN002::Clusterer::kMeans(vector <hist> hi
         hist.clusterID = rand() % noClusters;
     }
 
+    clusters = hists;
     cout << "Before k-means" << endl;
-    for (int i = 0; i < noClusters; ++i) {
-        cout << "cluster" << i << ": ";
-        for (auto& cluster : hists) {
-            if (cluster.clusterID == i) {
-                cout << cluster.name << " ";
-            }
-        }
-        cout << endl;
-        cout << endl;
-    }
+    cout << *this << endl;
+//    for (int i = 0; i < noClusters; ++i) {
+//        cout << "cluster" << i << ": ";
+//        for (auto& cluster : hists) {
+//            if (cluster.clusterID == i) {
+//                cout << cluster.name << " ";
+//            }
+//        }
+//        cout << endl;
+//        cout << endl;
+//    }
 
     //BEGIN OF LOOP
     cout << "0" << endl;
@@ -184,9 +186,23 @@ vector<MZMTIN002::Clusterer::hist> MZMTIN002::Clusterer::kMeans(vector <hist> hi
 
     cout << "7" << endl;
 
-    return hists;
+    clusters = hists;
 }
 
 void MZMTIN002::Clusterer::setNoClusters(int noClustersToSet) {
     this->noClusters = noClustersToSet;
+}
+
+ostream &MZMTIN002::operator<<(ostream &os, const MZMTIN002::Clusterer &kt) {
+    for (int i = 0; i < kt.noClusters; ++i) {
+        os << "cluster" << i << ": ";
+        for (auto& cluster : kt.clusters) {
+            if (cluster.clusterID == i) {
+                cout << cluster.name << " ";
+            }
+        }
+        os << endl;
+        os << endl;
+    }
+    return os;
 }
