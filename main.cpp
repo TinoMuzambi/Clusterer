@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
 //            cout << int(grayPixels[i])<< " " << endl;
 //        }
 
-        unsigned int* histogram = clusterer.generateHistogram(grayPixels);
+        vector<unsigned int> histogram = clusterer.generateHistogram(grayPixels);
 
 //        cout << "Histogram #" << i << endl;
 //        for (int j = 0; j < noEntries; ++j) {
@@ -89,7 +89,8 @@ int main(int argc, char* argv[]) {
     }
 
     clusterer.setNoClusters(noClusters);
-    vector<MZMTIN002::Clusterer::hist>  clusters = clusterer.kMeans(histograms, 4);
+    vector<MZMTIN002::Clusterer::hist>  clusters = clusterer.kMeans(histograms, 10);
+    cout << "8" << endl;
 
     cout << "After k-means" << endl;
     for (int i = 0; i < noClusters; ++i) {

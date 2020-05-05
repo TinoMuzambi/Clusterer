@@ -76,12 +76,12 @@ for (int i = 0; i < w * h; ++i) {
     return grayPixels;
 }
 
-unsigned int * MZMTIN002::Clusterer::generateHistogram(const vector<unsigned char>& grayPixels) const {
-    unsigned int* histogram;
+vector<unsigned int> MZMTIN002::Clusterer::generateHistogram(const vector<unsigned char>& grayPixels) const {
+    vector<unsigned int> histogram;
     int noEntries = (256 % binWidth == 0) ? 256 / binWidth : 256 / binWidth + 1;
-    histogram = new unsigned int[noEntries];
+    histogram.reserve(noEntries);
     for (int i = 0; i < noEntries; ++i) {
-        histogram[i] = 0;
+        histogram.push_back(0);
     }
     for (unsigned char grayPixel : grayPixels) {
         int pos = grayPixel / binWidth;
@@ -99,6 +99,7 @@ vector<MZMTIN002::Clusterer::hist> MZMTIN002::Clusterer::kMeans(vector <hist> hi
     vector<hist> centroids; // Initialising the clusters.
     srand(time(0));
     centroids.reserve(noClusters);
+
     for (int i = 0; i < noClusters; ++i) {
         hist tempHist = hists.at(rand() % hists.size());
         tempHist.clusterID = i;
@@ -107,49 +108,6 @@ vector<MZMTIN002::Clusterer::hist> MZMTIN002::Clusterer::kMeans(vector <hist> hi
 
     for (auto& hist : hists) { // Assign each data point to one of K clusters.
         hist.clusterID = rand() % noClusters;
-    }
-
-    //BEGIN OF LOOP
-    for (int i = 0; i < noIterations; ++i) {
-        for (auto iter = begin(centroids); iter != end(centroids); iter++) { // Assigning points to a centroid.
-            int clusterID = iter - begin(centroids);
-
-            for (auto &iter2 : hists) {
-                hist hist = iter2;
-                double dist = iter->histDistance(hist);
-                if (dist < hist.minDistance) {
-                    hist.minDistance = dist;
-                    hist.clusterID = clusterID;
-                }
-                iter2 = hist;
-            }
-        }
-
-        // Update centroids.
-        for (auto& centroid : centroids) {
-            int sum = 0;
-            vector<int> sums;
-            sums.reserve(centroid.noEntries);
-            for (int l = 0; l < centroid.noEntries; ++l) {
-                sums[i] = 0;
-            }
-            for (auto& hist : hists) {
-                if (hist.clusterID == centroid.clusterID) {
-                    for (int j = 0; j < sizeof(hist.histogram); ++j) {
-                        for (int k = 0; k < centroid.noEntries; ++k) {
-                            sums[k] += hist.histogram[k]; 
-                        }
-                    }
-                }
-            }
-            auto *newHist = new unsigned int[centroid.noEntries];
-            for (int m = 0; m < centroid.noEntries; ++m) {
-                newHist[m] = sums[m]/centroid.noEntries;
-            }
-            centroid.histogram = newHist;
-        }
-
-
     }
 
     cout << "Before k-means" << endl;
@@ -163,6 +121,69 @@ vector<MZMTIN002::Clusterer::hist> MZMTIN002::Clusterer::kMeans(vector <hist> hi
         cout << endl;
         cout << endl;
     }
+
+    //BEGIN OF LOOP
+    cout << "0" << endl;
+    for (int i = 0; i < noIterations; ++i) {
+        cout << "1" << endl;
+        for (auto& hist : hists) {
+            for (int j = 0; j < centroids.size(); ++j) {
+                double dist = hist.histDistance(centroids[j]);
+                if (dist < hist.minDistance) {
+                    hist.minDistance = dist;
+                    hist.clusterID = j;
+                }
+            }
+        }
+
+        vector<vector<unsigned int>> newCentroids; // here
+        newCentroids.reserve(noClusters);
+        vector<unsigned int> newCentroid;
+        newCentroid.reserve(centroids[0].histogram.size());
+        vector<int> noCentroids;
+        noCentroids.reserve(noClusters);
+        cout << "2" << endl;
+        for (int k = 0; k < centroids[0].histogram.size(); ++k) {
+            newCentroid.push_back(0);
+        }
+        for (int l = 0; l < noClusters; ++l) {
+            newCentroids.push_back(newCentroid);
+        }
+        for (int m = 0; m < noClusters; ++m) {
+            noCentroids.push_back(0);
+        }
+
+        cout << "3" << endl;
+        for (auto& hist : hists) {
+            for (int j = 0; j < centroids.size(); ++j) {
+                if (hist.clusterID == j) {
+                    noCentroids[j]++;
+                    for (int k = 0; k < centroids.size(); ++k) {
+                        newCentroids[j][k] += hist.histogram[k];
+                    }
+                }
+            }
+        }
+
+        cout << "4" << endl;
+        for (auto& nCentroid : newCentroids) {
+            for (int j = 0; j < nCentroid.size(); ++j) {
+                if (noCentroids[j] != 0) {
+                    nCentroid[j] /= noCentroids[j];
+                }
+            }
+        }
+
+        cout << "5" << endl;
+        for (int n = 0; n < newCentroids.size(); ++n) {
+            cout << n << endl;
+            hist tempHist(newCentroids[n], centroids[n].noEntries, centroids[n].name);
+            centroids.at(n) = tempHist;
+        }
+        cout << "6" << endl;
+    }
+
+    cout << "7" << endl;
 
     return hists;
 }

@@ -28,20 +28,19 @@ namespace MZMTIN002 {
         vector<pixel> pixels;
     public:
         struct hist {
-            unsigned int *histogram;
+            vector<unsigned int> histogram;
             string name;
             int clusterID, noEntries;
             double minDistance;
 
             hist():
-                    histogram(nullptr),
                     name(""),
                     clusterID(-1),
                     noEntries(-1),
                     minDistance(__DBL_MAX__) {}
 
-            hist(unsigned int* histogram, int noEntries, string name):
-                    histogram(histogram),
+            hist(vector<unsigned int> histogram, int noEntries, string name):
+                    histogram(move(histogram)),
                     clusterID(-1),
                     noEntries(noEntries),
                     name(std::move(name)),
@@ -68,7 +67,7 @@ namespace MZMTIN002 {
 
         vector<unsigned char> makeGrayscale(); // convert image into grayscale and store in vector of unsigned chars.
 
-        unsigned int * generateHistogram(const vector<unsigned char>& grayPixels) const; // generate histogram to be used for clustering.
+        vector<unsigned int> generateHistogram(const vector<unsigned char>& grayPixels) const; // generate histogram to be used for clustering.
 
         vector<hist> kMeans(vector<hist> hists, int noIterations);
 
