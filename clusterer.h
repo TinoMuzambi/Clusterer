@@ -47,10 +47,10 @@ namespace MZMTIN002 {
                     minDistance(__DBL_MAX__) {}
 
 
-            double histDistance(const hist& oHist) const {
+            double histDistance(const vector<unsigned int>& oHistogram) const {
                 double sum = 0;
                 for (int i = 0; i < noEntries; ++i) {
-                    int diff = histogram[i] - oHist.histogram[i];
+                    int diff = histogram[i] - oHistogram[i];
                     sum += pow(diff, 2.0);
                 }
                 return sqrt(sum);
