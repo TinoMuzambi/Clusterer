@@ -1,6 +1,10 @@
 # MZMTIN002 Assignment 4
 
+Run this program by typing the following comand with the required options:
+
 clusterer \<dataset> [-o output] [-k n] [-bin b]
+
+arguments between <> are mandatory and arguments betwwen [] are optional.
 
 dataset is the location of
 the folder that contains the images to be clustered. There are also three optional command
